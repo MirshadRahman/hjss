@@ -70,6 +70,21 @@ public class Learner {
         this.bookedLessons = bookedLessons;
     }
 
+    public List<Lesson> getAttendedLessons() {
+        return attendedLessons;
+    }
+
+    public void setAttendedLessons(List<Lesson> attendedLessons) {
+        this.attendedLessons = attendedLessons;
+    }
+
+    public List<Lesson> getCanceledLessons() {
+        return canceledLessons;
+    }
+
+    public void setCanceledLessons(List<Lesson> canceledLessons) {
+        this.canceledLessons = canceledLessons;
+    }
 
     public void bookLesson(Lesson lesson) {
         bookedLessons.add(lesson);
