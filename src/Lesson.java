@@ -74,7 +74,13 @@ public class Lesson {
         this.learners = learners;
     }
 
-
+    public boolean addLearner(Learner learner) {
+        if (learners.size() < capacity) {
+            learners.add(learner);
+            return true;
+        }
+        return false;
+    }
 
     public boolean removeLearner(Learner learner) {
         return learners.remove(learner);
