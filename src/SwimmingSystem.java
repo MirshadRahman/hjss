@@ -1,92 +1,68 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-public class Main {
-    public static void main(String[] args) {
-        SwimmingSystem swimmingSystem = new SwimmingSystem();
+public class SwimmingSystem {
+    private List<Lesson> lessons;
+    private List<Coach> coaches;
+    private List<Learner> learners;
+
+    public SwimmingSystem() {
+        this.lessons = new ArrayList<>();
+        this.coaches = new ArrayList<>();
+        this.learners = new ArrayList<>();
+    }
+
+    public void addLesson(Lesson lesson) {
+        lessons.add(lesson);
+    }
+    public void addCoach(Coach coach) {
+        coaches.add(coach);
+    }
+    public void addLearner(Learner learner) {
+        learners.add(learner);
+    }
+
+    public void registerNewLearner() {
         Scanner scanner = new Scanner(System.in);
 
-        while (true) {
-            System.out.println("Main Menu:");
-            System.out.println("1. Book a swimming lesson");
-            System.out.println("2. Change/Cancel a booking");
-            System.out.println("3. Attend a swimming lesson");
-            System.out.println("4. Monthly learner report");
-            System.out.println("5. Monthly coach report");
-            System.out.println("6. Register a new learner");
-            System.out.println("7. Exit");
-            System.out.print("Enter your choice: ");
+        System.out.println("Enter learner's name:");
+        String name = scanner.nextLine();
 
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+        System.out.println("Enter learner's gender:");
+        String gender = scanner.nextLine();
 
-            switch (choice) {
-                case 1:
-                    bookLesson(swimmingSystem, scanner);
-                    break;
-                case 2:
-                    // Code to handle changing/canceling a booking
-                    System.out.println("Enter learner's name:");
-                    String learnerName = scanner.nextLine();
-                    //swimmingSystem.changeOrCancelBooking(learnerName);
-                    break;
-                case 3:
-                    // Code to handle attending a swimming lesson
-                    System.out.println("Enter learner's name:");
-                    String learnerName1 = scanner.nextLine();
-                    //swimmingSystem.attendSwimmingLesson(learnerName1);
-                    break;
-                case 4:
-                    // Code to handle generating monthly learner report
-                    //swimmingSystem.generateMonthlyReport();
-                    break;
-                case 5:
-                    // Code to handle generating monthly coach report
-                    //swimmingSystem.generateMonthlyReportForCoach();
-                    break;
-                case 6:
-                    // Code to handle registering a new learner
-                    swimmingSystem.registerNewLearner();
-                    break;
-                case 7:
-                    System.out.println("Exiting program. Goodbye!");
-                    System.exit(0);
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-            }
-        }
-    }
-
-    private static void bookLesson(SwimmingSystem swimmingSystem, Scanner scanner) {
-        System.out.println("Enter your name:");
-        String learnerName = scanner.nextLine();
-        System.out.println("Select filter option:");
-        System.out.println("1. View timetable by day");
-        System.out.println("2. View timetable by grade level");
-        System.out.println("3. View timetable by coach");
-        int filterOption = scanner.nextInt();
+        System.out.println("Enter learner's age:");
+        int age = scanner.nextInt();
         scanner.nextLine(); // Consume newline
-        String filterValue;
-        switch (filterOption) {
-            case 1:
-                System.out.println("Enter day:");
-                filterValue = scanner.nextLine();
-                //swimmingSystem.displayTimetable("day", filterValue);
-                break;
-            case 2:
-                System.out.println("Enter grade level:");
-                int gradeLevel = scanner.nextInt();
-                scanner.nextLine(); // Consume newline
-                //swimmingSystem.displayTimetable("grade level", String.valueOf(gradeLevel));
-                break;
-            case 3:
-                System.out.println("Enter coach:");
-                filterValue = scanner.nextLine();
-                //swimmingSystem.displayTimetable("coach", filterValue);
-                break;
-            default:
-                System.out.println("Invalid filter option.");
-                return;
+        if(age<4 && age>11)
+        {
+            System.out.println("Age should be between 4 - 11 ");
+            return;
         }
 
+        System.out.println("Enter learner's emergency contact:");
+        String emergencyContact = scanner.nextLine();
+
+        System.out.println("Enter learner's current grade level between 0 to 5:");
+        int currentGrade = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        if(currentGrade<0 && currentGrade>5)
+        {
+            System.out.println("grade level should be between 0 - 5 ");
+            return;
+        }
+        Learner learner = new Learner(name, gender, age, emergencyContact, currentGrade);
+        addLearner(learner);
+
+        System.out.println("New learner registered successfully!");
+        // scanner.close();
     }
+
+
+
+
+
+
+
 }

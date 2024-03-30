@@ -1,15 +1,92 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        SwimmingSystem swimmingSystem = new SwimmingSystem();
+        Scanner scanner = new Scanner(System.in);
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        while (true) {
+            System.out.println("Main Menu:");
+            System.out.println("1. Book a swimming lesson");
+            System.out.println("2. Change/Cancel a booking");
+            System.out.println("3. Attend a swimming lesson");
+            System.out.println("4. Monthly learner report");
+            System.out.println("5. Monthly coach report");
+            System.out.println("6. Register a new learner");
+            System.out.println("7. Exit");
+            System.out.print("Enter your choice: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    bookLesson(swimmingSystem, scanner);
+                    break;
+                case 2:
+                    // Code to handle changing/canceling a booking
+                    System.out.println("Enter learner's name:");
+                    String learnerName = scanner.nextLine();
+                    //swimmingSystem.changeOrCancelBooking(learnerName);
+                    break;
+                case 3:
+                    // Code to handle attending a swimming lesson
+                    System.out.println("Enter learner's name:");
+                    String learnerName1 = scanner.nextLine();
+                    //swimmingSystem.attendSwimmingLesson(learnerName1);
+                    break;
+                case 4:
+                    // Code to handle generating monthly learner report
+                    //swimmingSystem.generateMonthlyReport();
+                    break;
+                case 5:
+                    // Code to handle generating monthly coach report
+                    //swimmingSystem.generateMonthlyReportForCoach();
+                    break;
+                case 6:
+                    // Code to handle registering a new learner
+                    swimmingSystem.registerNewLearner();
+                    break;
+                case 7:
+                    System.out.println("Exiting program. Goodbye!");
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
         }
+    }
+
+    private static void bookLesson(SwimmingSystem swimmingSystem, Scanner scanner) {
+        System.out.println("Enter your name:");
+        String learnerName = scanner.nextLine();
+        System.out.println("Select filter option:");
+        System.out.println("1. View timetable by day");
+        System.out.println("2. View timetable by grade level");
+        System.out.println("3. View timetable by coach");
+        int filterOption = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        String filterValue;
+        switch (filterOption) {
+            case 1:
+                System.out.println("Enter day:");
+                filterValue = scanner.nextLine();
+                //swimmingSystem.displayTimetable("day", filterValue);
+                break;
+            case 2:
+                System.out.println("Enter grade level:");
+                int gradeLevel = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+                //swimmingSystem.displayTimetable("grade level", String.valueOf(gradeLevel));
+                break;
+            case 3:
+                System.out.println("Enter coach:");
+                filterValue = scanner.nextLine();
+                //swimmingSystem.displayTimetable("coach", filterValue);
+                break;
+            default:
+                System.out.println("Invalid filter option.");
+                return;
+        }
+
     }
 }
