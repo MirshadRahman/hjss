@@ -1,83 +1,92 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
-public class SwimmingSystem {
-    private List<Lesson> lessons;
-    private List<Coach> coaches;
-    private List<Learner> learners;
-
-    public SwimmingSystem() {
-        this.lessons = new ArrayList<>();
-        this.coaches = new ArrayList<>();
-        this.learners = new ArrayList<>();
-    }
-
-    public void addLesson(Lesson lesson) {
-        lessons.add(lesson);
-    }
-
-    public void addCoach(Coach coach) {
-        coaches.add(coach);
-    }
-
-    public void addLearner(Learner learner) {
-        learners.add(learner);
-    }
-
-    public void displayTimetableByGradeLevel(int gradeLevel) {
-        System.out.println("Available Lessons for Grade Level " + gradeLevel + ":");
-        for (Lesson lesson : lessons) {
-            if (lesson.getGradeLevel() == gradeLevel) {
-                System.out.println("Day: " + lesson.getDay() + ", Time: " + lesson.getTime() +
-                        ", Coach: " + lesson.getCoach() + ", Capacity: " + lesson.getCapacity());
-            }
-        }
-    }
-
-    public void bookLesson(String learnerName, int gradeLevel) {
+public class Main {
+    public static void main(String[] args) {
+        SwimmingSystem swimmingSystem = new SwimmingSystem();
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Available Lessons for Grade Level " + gradeLevel + ":");
-        displayTimetableByGradeLevel(gradeLevel);
-        System.out.println("Enter the time (e.g., 4-5pm) of the lesson you want to book:");
-        String lessonTime = scanner.nextLine();
 
-        Lesson selectedLesson = findLessonByGradeLevelAndTime(gradeLevel, lessonTime);
-        if (selectedLesson != null) {
-            Learner learner = findLearner(learnerName);
-            if (learner != null) {
-                if (selectedLesson.addLearner(learner)) {
-                    learner.bookLesson(selectedLesson);
-                    System.out.println(learnerName + " has successfully booked the lesson.");
-                } else {
-                    System.out.println("The lesson is already full. Booking failed.");
-                }
-            } else {
-                System.out.println("Learner not found.");
+        while (true) {
+            System.out.println("Main Menu:");
+            System.out.println("1. Book a swimming lesson");
+            System.out.println("2. Change/Cancel a booking");
+            System.out.println("3. Attend a swimming lesson");
+            System.out.println("4. Monthly learner report");
+            System.out.println("5. Monthly coach report");
+            System.out.println("6. Register a new learner");
+            System.out.println("7. Exit");
+            System.out.print("Enter your choice: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    bookLesson(swimmingSystem, scanner);
+                    break;
+                case 2:
+                    // Code to handle changing/canceling a booking
+                    System.out.println("Enter learner's name:");
+                    String learnerName = scanner.nextLine();
+                    //swimmingSystem.changeOrCancelBooking(learnerName);
+                    break;
+                case 3:
+                    // Code to handle attending a swimming lesson
+                    System.out.println("Enter learner's name:");
+                    String learnerName1 = scanner.nextLine();
+                    //swimmingSystem.attendSwimmingLesson(learnerName1);
+                    break;
+                case 4:
+                    // Code to handle generating monthly learner report
+                    //swimmingSystem.generateMonthlyReport();
+                    break;
+                case 5:
+                    // Code to handle generating monthly coach report
+                    //swimmingSystem.generateMonthlyReportForCoach();
+                    break;
+                case 6:
+                    // Code to handle registering a new learner
+                    swimmingSystem.registerNewLearner();
+                    break;
+                case 7:
+                    System.out.println("Exiting program. Goodbye!");
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid choice. Please try again.");
             }
-        } else {
-            System.out.println("Lesson not found.");
         }
     }
 
-    private Lesson findLessonByGradeLevelAndTime(int gradeLevel, String lessonTime) {
-        for (Lesson lesson : lessons) {
-            if (lesson.getGradeLevel() == gradeLevel && lesson.getTime().equalsIgnoreCase(lessonTime)) {
-                return lesson;
-            }
+    private static void bookLesson(SwimmingSystem swimmingSystem, Scanner scanner) {
+        System.out.println("Enter your name:");
+        String learnerName = scanner.nextLine();
+        System.out.println("Select filter option:");
+        System.out.println("1. View timetable by day");
+        System.out.println("2. View timetable by grade level");
+        System.out.println("3. View timetable by coach");
+        int filterOption = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+        String filterValue;
+        switch (filterOption) {
+            case 1:
+                System.out.println("Enter day:");
+                filterValue = scanner.nextLine();
+                //swimmingSystem.displayTimetable("day", filterValue);
+                break;
+            case 2:
+                System.out.println("Enter grade level:");
+                int gradeLevel = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+                //swimmingSystem.displayTimetable("grade level", String.valueOf(gradeLevel));
+                break;
+            case 3:
+                System.out.println("Enter coach:");
+                filterValue = scanner.nextLine();
+                //swimmingSystem.displayTimetable("coach", filterValue);
+                break;
+            default:
+                System.out.println("Invalid filter option.");
+                return;
         }
-        return null;
-    }
 
-    private Learner findLearner(String learnerName) {
-        for (Learner learner : learners) {
-            if (learner.getName().equalsIgnoreCase(learnerName)) {
-                return learner;
-            }
-        }
-        return null;
-    }
-
-    public void displayTimetable(String day, String filterValue) {
     }
 }
