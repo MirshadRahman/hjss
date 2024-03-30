@@ -86,21 +86,11 @@ public class Learner {
         this.canceledLessons = canceledLessons;
     }
 
-    public void bookLesson(Lesson lesson) {
-        bookedLessons.add(lesson);
-    }
-
-    public void cancelLesson(Lesson lesson) {
-        bookedLessons.remove(lesson);
-        canceledLessons.add(lesson);
-    }
-
-    public void attendLesson(Lesson lesson) {
-        bookedLessons.remove(lesson);
-        attendedLessons.add(lesson);
-    }
 
     public void writeReviewAndRating(Lesson lesson, String review, int rating) {
         // Write review and rating for a lesson
     }
+
+
+
 }
