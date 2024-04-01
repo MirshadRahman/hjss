@@ -1,4 +1,3 @@
-
 public class Booking {
 
     private String bookingId;
@@ -27,5 +26,16 @@ public class Booking {
 
     public void setLesson(Lesson lesson) {
         this.lesson = lesson;
+    }
+
+    public String[] getDecodedBookin()
+    {
+        if(bookingId !=null && !bookingId.isEmpty()) {
+            String[] components = bookingId.split("_");
+            return components;
+        }
+        return null;
+
+
     }
 }
