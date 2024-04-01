@@ -3,11 +3,13 @@ import java.util.List;
 
 public class Lesson {
     private String day;
+    private int week;
     private String time;
     private int gradeLevel;
     private String coach;
     private int capacity;
     private List<Learner> learners;
+    private int rating;
 
     public Lesson(String day, String time, int gradeLevel, String coach, int capacity) {
         this.day = day;
@@ -27,6 +29,7 @@ public class Lesson {
         this.time = time;
         this.gradeLevel = gradeLevel;
         this.coach = coach;
+        this.learners = new ArrayList<>();
     }
 
 
@@ -67,7 +70,16 @@ public class Lesson {
     }
 
     public List<Learner> getLearners() {
+
         return learners;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     public void setLearners(List<Learner> learners) {
@@ -75,14 +87,32 @@ public class Lesson {
     }
 
     public boolean addLearner(Learner learner) {
-        if (learners.size() < capacity) {
+        if (learners.size() < 4) {
             learners.add(learner);
             return true;
         }
         return false;
     }
 
+    public int getWeek() {
+        return week;
+    }
+
+    public void setWeek(int week) {
+        this.week = week;
+    }
+
     public boolean removeLearner(Learner learner) {
         return learners.remove(learner);
+    }
+
+    @Override
+    public String toString() {
+        return "Lesson{" +
+                "day='" + day + '\'' +
+                ", week=" + week +
+                ", time='" + time + '\'' +
+                ", gradeLevel=" + gradeLevel +
+                '}';
     }
 }
