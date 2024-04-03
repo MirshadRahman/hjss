@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -7,6 +8,7 @@ import java.util.Optional;
 import java.util.Scanner;
 
 public class SwimmingSystem {
+
     private List<Lesson> lessons;
     private List<Coach> coaches;
     private List<Learner> learners;
@@ -64,8 +66,8 @@ public class SwimmingSystem {
                 //System.out.println(line);
                 String[] l = line.split(",");
                 week = Integer.parseInt(l[0]);
-                grade =Integer.parseInt(l[3]);
-                Lesson les = new Lesson(l[1],l[2],grade,l[4].trim());
+                grade = Integer.parseInt(l[3]);
+                Lesson les = new Lesson(l[1], l[2], grade, l[4].trim());
                 les.setWeek(week);
                 lessons.add(les);
             }
@@ -191,13 +193,18 @@ public class SwimmingSystem {
             }
 
             if (match) {
-                System.out.println(lesson.getWeek()+"\t"+ lesson.getDay() + "\t" + lesson.getTime() + "\t" + lesson.getGradeLevel() + "\t\t"
-                        + lesson.getCoach() + "\t" + (4-lesson.getLearners().size()));
+                System.out.println(lesson.getWeek()
+                        + "\t" + lesson.getDay()
+                        + "\t" + lesson.getTime()
+                        + "\t" + lesson.getGradeLevel()
+                        + "\t" + lesson.getCoach()
+                        + "\t" + (4 - lesson.getLearners().size()));
             }
         }
         System.out.println("------------------------------------------------------------");
 
     }
+
     public void askForBooking(Scanner scanner, String learnerName) {
         Learner learner = findLearner(learnerName);
         if (learner == null) {
@@ -215,8 +222,7 @@ public class SwimmingSystem {
         int sel_grade = scanner.nextInt();
         scanner.nextLine();
 
-        if(learner.getCurrentGrade() < sel_grade-1)
-        {
+        if (learner.getCurrentGrade() < sel_grade - 1) {
             System.out.println("-------------------------------------------------------");
             System.out.println("You are not Eligible for this Grade ...");
             System.out.println("-------------------------------------------------------");
@@ -226,22 +232,19 @@ public class SwimmingSystem {
                         && lesson.getTime().equals(sel_slot)
                         && lesson.getGradeLevel() == sel_grade))
                 .findFirst();
-        if(first.isEmpty())
-        {
+        if (first.isEmpty()) {
             System.out.println("-------------------------------------------------------");
             System.out.println("Lesson Not Found !!!!!!");
             System.out.println("-------------------------------------------------------");
-        }
-        else {
-            if(first.get().getLearners().size()<4) {
+        } else {
+            if (first.get().getLearners().size() < 4) {
                 first.get().getLearners().add(learner);
                 learner.getBookedLessons().add(first.get());
                 System.out.println("-------------------------------------------------------");
                 System.out.println("Booking Successfull");
                 System.out.println("-------------------------------------------------------");
 
-            }
-            else {
+            } else {
                 System.out.println("-------------------------------------------------------");
                 System.out.println("Max 4 allowed !!!!!!");
                 System.out.println("Booking NOT  Successfull");
@@ -296,22 +299,30 @@ public class SwimmingSystem {
 
         Learner learner = new Learner(name, gender, age, emergencyContact, currentGrade);
         addLearner(learner);
-
+        System.out.println("-------------------------------------------------------");
         System.out.println("New learner registered successfully!");
+        System.out.println("-------------------------------------------------------");
         // scanner.close();
     }
 
     public void attendSwimmingLesson(String learnerName) {
 
         Learner learner = findLearner(learnerName);
-        if(learner == null)
-        {
-            System.out.println(learnerName+ "Not Registered");
+        if (learner == null) {
+            System.out.println("-------------------------------------------------------");
+            System.out.println(learnerName + "Not Registered");
+            System.out.println("-------------------------------------------------------");
             return;
         }
 
-        System.out.println( "All Booked Lesson of "+learnerName);
+        System.out.println("All Booked Lesson of " + learnerName);
+        if (learner.getBookedLessons().size() < 1) {
+            System.out.println(learnerName + " has no booked Lesson to attend");
+            return;
+        }
+        System.out.println("-------------------------------------------------------");
         learner.getBookedLessons().forEach(bookedLesson -> System.out.println(bookedLesson.toString()));
+        System.out.println("-------------------------------------------------------");
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Enter the week of the lesson:");
@@ -330,13 +341,19 @@ public class SwimmingSystem {
                 if (lesson.getLearners().contains(learner)) {
                     System.out.println("-------------------------------------------------------------------");
                     System.out.println(learnerName + " attended the lesson successfully.");
+                    System.out.println("-------------------------------------------------------");
+                    System.out.println("1: Very dissatisfied \n"
+                            + " 2: Dissatisfied\n"
+                            + " 3: Ok\n"
+                            + " 4: Satisfied\n"
+                            + " 5: Very Satisfied\n");
+                    System.out.println("-------------------------------------------------------");
                     System.out.println("Give the rating to Coach from (1 to 5) ");
                     int rating = scanner.nextInt();
                     scanner.nextLine();
                     Optional<Coach> coach = this.coaches.stream()
                             .filter(coach1 -> coach1.getName().equals(lesson.getCoach())).findFirst();
-                    if(!coach.isEmpty())
-                    {
+                    if (!coach.isEmpty()) {
                         try {
                             lesson.setRating(rating);
                             coach.get().getLessonsTaught().add((Lesson) lesson.clone());
@@ -346,11 +363,7 @@ public class SwimmingSystem {
                     }
                     lesson.getLearners().remove(learner);
 
-
-
                     learner.attendLesson(lesson);
-
-
 
                 } else {
                     System.out.println(learnerName + " is not booked for this lesson.");
@@ -373,10 +386,11 @@ public class SwimmingSystem {
         }
         return null;
     }
-    private Lesson findLessonByWeekDayTimeGrade(String day, String timeSlot, int week,int grade) {
+
+    private Lesson findLessonByWeekDayTimeGrade(String day, String timeSlot, int week, int grade) {
         for (Lesson lesson : lessons) {
             if (lesson.getDay().equalsIgnoreCase(day) && lesson.getTime().equalsIgnoreCase(timeSlot)
-                    && lesson.getWeek() == week && lesson.getGradeLevel()== grade) {
+                    && lesson.getWeek() == week && lesson.getGradeLevel() == grade) {
                 return lesson;
             }
         }
@@ -385,14 +399,16 @@ public class SwimmingSystem {
 
     public void changeOrCancelBooking(String learnerName) {
 
-
         Learner learner = findLearner(learnerName);
-        if(learner == null)
-        {
-            System.out.println(learnerName+ "Not Registered");
+        if (learner == null) {
+            System.out.println(learnerName + "Not Registered");
             return;
         }
-        System.out.println( "All Booked Lesson of "+learnerName);
+        System.out.println("All Booked Lesson of " + learnerName);
+        if (learner.getBookedLessons().size() < 1) {
+            System.out.println(learnerName + " has no booked Lesson");
+            return;
+        }
         learner.getBookedLessons().forEach(bookedLesson -> System.out.println(bookedLesson.toString()));
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the week of the lesson:");
@@ -407,7 +423,6 @@ public class SwimmingSystem {
 //		System.out.println("Enter the grade level of the lesson:");
 //		int gradeLevel = scanner.nextInt();
 //		scanner.nextLine(); // Consume newline
-
         Lesson lesson = findLessonByDayTimeGrade(day, timeSlot, week);
         if (lesson != null) {
             if (lesson.getLearners().contains(learner)) {
@@ -450,7 +465,7 @@ public class SwimmingSystem {
         int newGradeLevel = scanner.nextInt();
         scanner.nextLine(); // Consume newline
 
-        Lesson newLesson = findLessonByWeekDayTimeGrade(newDay, newTimeSlot,newWeek, newGradeLevel);
+        Lesson newLesson = findLessonByWeekDayTimeGrade(newDay, newTimeSlot, newWeek, newGradeLevel);
         if (newLesson != null) {
             if (newLesson.addLearner(learner)) {
                 lesson.getLearners().remove(learner);
@@ -471,7 +486,17 @@ public class SwimmingSystem {
         System.out.println("Booking canceled successfully.");
     }
 
-    public void generateMonthlyReport() {
+    public void generateMonthlyReport(int monthNumber) {
+        String weekrange = getWeekRangeForMonth(monthNumber);
+        String[] arr = null;
+        try {
+            arr = weekrange.split("-");
+        } catch (Exception e) {
+            System.out.println("INVALID MONTH");
+            return;
+        }
+        int startWeek = Integer.parseInt(arr[0]);
+        int endWeek = Integer.parseInt(arr[1]);
         // Loop through all learners
         for (Learner learner : learners) {
             // Print learner's name
@@ -485,23 +510,29 @@ public class SwimmingSystem {
             // Loop through learner's booked lessons
             System.out.println("Booked lessons:");
             for (Lesson lesson : learner.getBookedLessons()) {
-                System.out.println(" - " + lesson.getDay() + " " + lesson.getTime());
-                learnerBookedCount++;
+                if (lesson.getWeek() >= startWeek && lesson.getWeek() <= endWeek) {
+                    System.out.println(" - " + lesson.getDay() + " " + lesson.getTime());
+                    learnerBookedCount++;
+                }
             }
 
             // Loop through learner's canceled lessons
             System.out.println("Canceled lessons:");
             for (Lesson lesson : learner.getCanceledLessons()) {
-                System.out.println(" - " + lesson.getDay() + " " + lesson.getTime());
-                learnerCanceledCount++;
+                if (lesson.getWeek() >= startWeek && lesson.getWeek() <= endWeek) {
+                    System.out.println(" - " + lesson.getDay() + " " + lesson.getTime());
+                    learnerCanceledCount++;
+                }
             }
 
             // Loop through learner's attended lessons
             System.out.println("Attended lessons:");
             for (Lesson lesson : learner.getAttendedLessons()) {
-                System.out.println(" - " + lesson.getDay() + " " + lesson.getTime());
-                learnerAttendedCount++;
-                learnerBookedCount++;
+                if (lesson.getWeek() >= startWeek && lesson.getWeek() <= endWeek) {
+                    System.out.println(" - " + lesson.getDay() + " " + lesson.getTime());
+                    learnerAttendedCount++;
+                    learnerBookedCount++;
+                }
             }
 
             // Print learner's total counts
@@ -512,21 +543,33 @@ public class SwimmingSystem {
         }
     }
 
-    public void generateMonthlyReportForCoach() {
+    public void generateMonthlyReportForCoach(int monthNumber) {
+        String weekrange = getWeekRangeForMonth(monthNumber);
+        String[] arr = null;
+        try {
+            arr = weekrange.split("-");
+        } catch (Exception e) {
+            System.out.println("INVALID MONTH");
+            return;
+        }
+        int startWeek = Integer.parseInt(arr[0]);
+        int endWeek = Integer.parseInt(arr[1]);
         System.out.println("Monthly Coach Report:");
         for (Coach coach : coaches) {
             System.out.println("Coach: " + coach.getName());
             int totalRatings = 0;
             int numberOfRatings = 0;
             for (Lesson lesson : coach.getLessonsTaught()) {
-                System.out.println("Lesson: " + lesson.getDay() + " " + lesson.getTime());
-                int rating = lesson.getRating();
-                if (rating != -1) { // -1 indicates no rating provided
-                    totalRatings += rating;
-                    numberOfRatings++;
-                    System.out.println(" - Rating: " + rating);
-                }
+                if (lesson.getWeek() >= startWeek && lesson.getWeek() <= endWeek) {
+                    System.out.println("Lesson: " + lesson.getDay() + " " + lesson.getTime());
+                    int rating = lesson.getRating();
+                    if (rating != -1) { // -1 indicates no rating provided
+                        totalRatings += rating;
+                        numberOfRatings++;
+                        System.out.println(" - Rating: " + rating);
+                    }
 
+                }
             }
             if (numberOfRatings > 0) {
                 double averageRating = (double) totalRatings / numberOfRatings;
@@ -549,6 +592,24 @@ public class SwimmingSystem {
         addLearner(learner);
         learner = new Learner("Akshay", "Male", 8, "1234567891", 5);
         addLearner(learner);
+    }
+
+    public String getWeekRangeForMonth(int monthNumber) {
+        if (monthNumber < 1 || monthNumber > 12) {
+            return "Invalid month number";
+        }
+        String[] monthNames = {
+                "January", "February", "March", "April", "May", "June", "July",
+                "August", "September", "October", "November", "December"
+        };
+        System.out.println("******Report for month " + monthNames[monthNumber - 1] + "*******");
+
+        int[] monthToWeekRangeMap = {1, 4, 5, 8, 9, 12, 13, 16, 17, 20, 21,
+                24, 25, 28, 29, 32, 33, 36, 37, 40, 41, 44, 45, 48};
+        int startWeek = monthToWeekRangeMap[(monthNumber - 1) * 2];
+        int endWeek = monthToWeekRangeMap[(monthNumber - 1) * 2 + 1];
+
+        return startWeek + "-" + endWeek;
     }
 
 }
