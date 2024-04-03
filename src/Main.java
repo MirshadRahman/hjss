@@ -14,10 +14,8 @@ public class Main {
             System.out.println("4. Monthly learner report");
             System.out.println("5. Monthly coach report");
             System.out.println("6. Register a new learner");
-            System.out.println("7. Add a new lesson");
-            System.out.println("8. Add a new coach");
-            System.out.println("9. Exit");
-            System.out.println("Enter your choice: ");
+            System.out.println("7. Exit");
+            System.out.println("Enter your choice from 1 to 7: ");
 
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
@@ -39,26 +37,25 @@ public class Main {
                     swimmingSystem.attendSwimmingLesson(learnerName1);
                     break;
                 case 4:
+                    System.out.println("Enter Month Number (from 1 - 12:)");
+                    int month = scanner.nextInt();
+                    scanner.nextLine();
                     // Code to handle generating monthly learner report
-                    swimmingSystem.generateMonthlyReport();
+                    swimmingSystem.generateMonthlyReport(month);
                     break;
                 case 5:
+                    System.out.println("Enter Month Number (from 1 - 12:)");
+                    int month1 = scanner.nextInt();
+                    scanner.nextLine();
                     // Code to handle generating monthly coach report
-                    swimmingSystem.generateMonthlyReportForCoach();
+                    swimmingSystem.generateMonthlyReportForCoach(month1);
                     break;
                 case 6:
                     // Code to handle registering a new learner
                     swimmingSystem.registerNewLearner();
                     break;
+
                 case 7:
-                    // Code to handle adding a new lesson
-                    swimmingSystem.addNewLesson();
-                    break;
-                case 8:
-                    // Code to handle adding a new coach
-                    swimmingSystem.addNewCoach();
-                    break;
-                case 9:
                     System.out.println("Exiting program. Goodbye!");
                     System.exit(0);
                 default:
@@ -70,29 +67,31 @@ public class Main {
     private static void bookLesson(SwimmingSystem swimmingSystem, Scanner scanner) {
         System.out.println("Enter your name:");
         String learnerName = scanner.nextLine();
-        System.out.println("Select filter option:");
+        System.out.println("----------------------------------------------");
         System.out.println("1. View timetable by day");
         System.out.println("2. View timetable by grade level");
         System.out.println("3. View timetable by coach");
+        System.out.println("----------------------------------------------");
+        System.out.println("Select filter option from 1 to 3:");
         int filterOption = scanner.nextInt();
         scanner.nextLine(); // Consume newline
         String filterValue;
         switch (filterOption) {
             case 1:
-                System.out.println("Enter day:");
+                System.out.println("Enter day (for ex: Monday) :");
                 filterValue = scanner.nextLine();
                 swimmingSystem.displayTimetable("day", filterValue);
                 swimmingSystem.askForBooking(scanner,learnerName);
                 break;
             case 2:
-                System.out.println("Enter grade level:");
+                System.out.println("Enter grade levelform 1 to 5 (for ex: 1):");
                 int gradeLevel = scanner.nextInt();
                 scanner.nextLine(); // Consume newline
                 swimmingSystem.displayTimetable("grade level", String.valueOf(gradeLevel));
                 swimmingSystem.askForBooking(scanner,learnerName);
                 break;
             case 3:
-                System.out.println("Enter coach:");
+                System.out.println("Enter coach(for ex: Helen):");
                 filterValue = scanner.nextLine();
                 swimmingSystem.displayTimetable("coach", filterValue);
                 swimmingSystem.askForBooking(scanner,learnerName);
