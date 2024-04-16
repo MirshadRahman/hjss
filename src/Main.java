@@ -67,6 +67,11 @@ public class Main {
     private static void bookLesson(SwimmingSystem swimmingSystem, Scanner scanner) {
         System.out.println("Enter your name:");
         String learnerName = scanner.nextLine();
+        Learner learner = swimmingSystem.findLearner(learnerName);
+        if (learner == null) {
+            System.out.println("Learner Not registered");
+            return;
+        }
         System.out.println("----------------------------------------------");
         System.out.println("1. View timetable by day");
         System.out.println("2. View timetable by grade level");

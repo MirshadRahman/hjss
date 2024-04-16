@@ -179,9 +179,9 @@ public class SwimmingSystem {
 
     public void displayTimetable(String day, String filterValue) {
         System.out.println("Timetable for " + day + " | Filter: " + filterValue);
-        System.out.println("------------------------------------------------------------");
-        System.out.println("Week \t Day\tTime\tGrade Level\tCoach\tVacant");
-        System.out.println("------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------");
+        System.out.println("Week \t Day\t\tTime\t\tGrade\tCoach\tVacant");
+        System.out.println("---------------------------------------------------------------------");
         for (Lesson lesson : lessons) {
             boolean match = false;
             if (day.equalsIgnoreCase("day")) {
@@ -195,10 +195,10 @@ public class SwimmingSystem {
             if (match) {
                 System.out.println(lesson.getWeek()
                         + "\t" + lesson.getDay()
-                        + "\t" + lesson.getTime()
-                        + "\t" + lesson.getGradeLevel()
-                        + "\t" + lesson.getCoach()
-                        + "\t" + (4 - lesson.getLearners().size()));
+                        + "\t\t" + lesson.getTime()
+                        + "\t  " + lesson.getGradeLevel()
+                        + "\t  " + lesson.getCoach()
+                        + "\t   " + (4 - lesson.getLearners().size()));
             }
         }
         System.out.println("------------------------------------------------------------");
@@ -207,10 +207,6 @@ public class SwimmingSystem {
 
     public void askForBooking(Scanner scanner, String learnerName) {
         Learner learner = findLearner(learnerName);
-        if (learner == null) {
-            System.out.println("Learner Not registered");
-            return;
-        }
         System.out.println("Enter Week number :");
         int sel_week = scanner.nextInt();
         scanner.nextLine();
@@ -226,6 +222,18 @@ public class SwimmingSystem {
             System.out.println("-------------------------------------------------------");
             System.out.println("You are not Eligible for this Grade ...");
             System.out.println("-------------------------------------------------------");
+            return;
+        }
+        Optional<Lesson> findFirst = learner.getBookedLessons().stream().filter(lesson -> (lesson.getWeek() == sel_week
+                && lesson.getDay().equals(sel_day)
+                && lesson.getTime().equals(sel_slot)
+                && lesson.getGradeLevel() == sel_grade)).findFirst();
+        if(!findFirst.isEmpty())
+        {
+            System.out.println("-------------------------------------------------------");
+            System.out.println("Duplicate booking not allowed ...");
+            System.out.println("-------------------------------------------------------");
+            return;
         }
         Optional<Lesson> first = this.lessons.stream().filter(lesson -> (lesson.getWeek() == sel_week
                         && lesson.getDay().equals(sel_day)
@@ -289,6 +297,13 @@ public class SwimmingSystem {
         System.out.println("Enter learner's age:");
         int age = scanner.nextInt();
         scanner.nextLine(); // Consume newline
+        if(age<4 || age>11)
+        {
+            System.out.println("-------------------------------------------------------");
+            System.out.println("Age should be between 4 to 11");
+            System.out.println("-------------------------------------------------------");
+            return;
+        }
 
         System.out.println("Enter learner's emergency contact:");
         String emergencyContact = scanner.nextLine();
@@ -364,6 +379,7 @@ public class SwimmingSystem {
                     lesson.getLearners().remove(learner);
 
                     learner.attendLesson(lesson);
+                    learner.increaseGradeByOne();
 
                 } else {
                     System.out.println(learnerName + " is not booked for this lesson.");
@@ -580,6 +596,7 @@ public class SwimmingSystem {
             System.out.println();
         }
     }
+
 
     private void defaultLearners() {
         Learner learner = new Learner("Manish", "Male", 6, "1234567891", 2);
