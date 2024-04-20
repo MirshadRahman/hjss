@@ -1,7 +1,9 @@
+package com;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,17 +55,52 @@ public class SwimmingSystem {
 
     }
 
+    //    private void addDefaultlessons() {
+//        URL resourceURL = SwimmingSystem.class.getClassLoader().getResource("lessons.txt");
+//        String filename =null;
+//        if (resourceURL != null) {
+//            // Convert URL to file path
+//            filename = resourceURL.getPath();
+//            System.out.println("Path of data.txt: " + filename);}
+//
+//        System.out.println("Input TSream " + inputStream.toString());
+//        //String filename = ".\\src\\main\\resources\\lessons.txt";
+//        try {
+//            BufferedReader reader = new BufferedReader(new FileReader(filename));
+//            String line;
+//            int grade;
+//            int week;
+//            // Read each line from the file until the end
+//            while ((line = reader.readLine()) != null) {
+//                //System.out.println(line);
+//                String[] l = line.split(",");
+//                week = Integer.parseInt(l[0]);
+//                grade = Integer.parseInt(l[3]);
+//                Lesson les = new Lesson(l[1], l[2], grade, l[4].trim());
+//                les.setWeek(week);
+//                lessons.add(les);
+//            }
+//
+//            // Close the reader
+//            reader.close();
+//        } catch (IOException e) {
+//            System.err.println("Error reading the file: " + e.getMessage());
+//        }
+//
+//    }
     private void addDefaultlessons() {
+        InputStream inputStream = SwimmingSystem.class.getClassLoader().getResourceAsStream("lessons.txt");
+        if (inputStream == null) {
+            System.err.println("lessons.txt not found in the classpath.");
+            return;
+        }
 
-        String filename = ".\\src\\main\\resources\\lessons.txt";
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(filename));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
             int grade;
             int week;
             // Read each line from the file until the end
             while ((line = reader.readLine()) != null) {
-                //System.out.println(line);
                 String[] l = line.split(",");
                 week = Integer.parseInt(l[0]);
                 grade = Integer.parseInt(l[3]);
@@ -71,14 +108,11 @@ public class SwimmingSystem {
                 les.setWeek(week);
                 lessons.add(les);
             }
-
-            // Close the reader
-            reader.close();
         } catch (IOException e) {
             System.err.println("Error reading the file: " + e.getMessage());
         }
-
     }
+
 
     public void addLesson(Lesson lesson) {
         lessons.add(lesson);
@@ -352,42 +386,39 @@ public class SwimmingSystem {
 
         Lesson lesson = findLessonByDayTimeGrade(day, timeSlot, week);
         if (lesson != null) {
-            if (learner != null) {
-                if (lesson.getLearners().contains(learner)) {
-                    System.out.println("-------------------------------------------------------------------");
-                    System.out.println(learnerName + " attended the lesson successfully.");
-                    System.out.println("-------------------------------------------------------");
-                    System.out.println("1: Very dissatisfied \n"
-                            + " 2: Dissatisfied\n"
-                            + " 3: Ok\n"
-                            + " 4: Satisfied\n"
-                            + " 5: Very Satisfied\n");
-                    System.out.println("-------------------------------------------------------");
-                    System.out.println("Give the rating to Coach from (1 to 5) ");
-                    int rating = scanner.nextInt();
-                    scanner.nextLine();
-                    Optional<Coach> coach = this.coaches.stream()
-                            .filter(coach1 -> coach1.getName().equals(lesson.getCoach())).findFirst();
-                    if (!coach.isEmpty()) {
-                        try {
-                            lesson.setRating(rating);
-                            coach.get().getLessonsTaught().add((Lesson) lesson.clone());
-                        } catch (CloneNotSupportedException e) {
-                            throw new RuntimeException(e);
-                        }
+            if (lesson.getLearners().contains(learner)) {
+                System.out.println("-------------------------------------------------------------------");
+                System.out.println(learnerName + " attended the lesson successfully.");
+                System.out.println("-------------------------------------------------------");
+                System.out.println("1: Very dissatisfied \n"
+                        + " 2: Dissatisfied\n"
+                        + " 3: Ok\n"
+                        + " 4: Satisfied\n"
+                        + " 5: Very Satisfied\n");
+                System.out.println("-------------------------------------------------------");
+                System.out.println("Give the rating to Coach from (1 to 5) ");
+                int rating = scanner.nextInt();
+                scanner.nextLine();
+                Optional<Coach> coach = this.coaches.stream()
+                        .filter(coach1 -> coach1.getName().equals(lesson.getCoach())).findFirst();
+                if (!coach.isEmpty()) {
+                    try {
+                        lesson.setRating(rating);
+                        coach.get().getLessonsTaught().add((Lesson) lesson.clone());
+                    } catch (CloneNotSupportedException e) {
+                        throw new RuntimeException(e);
                     }
-                    lesson.getLearners().remove(learner);
-
-                    learner.attendLesson(lesson);
-                    learner.increaseGradeByOne();
-
-                } else {
-                    System.out.println(learnerName + " is not booked for this lesson.");
                 }
+                lesson.getLearners().remove(learner);
+
+                learner.attendLesson(lesson);
+                learner.increaseGradeByOne();
+
             } else {
-                System.out.println("Learner not found.");
+                System.out.println(learnerName + " is not booked for this lesson.");
             }
-        } else {
+        }
+        else {
             System.out.println("Lesson not found.");
         }
         // scanner.close();
@@ -496,7 +527,7 @@ public class SwimmingSystem {
         // scanner.close();
     }
 
-    private void cancelBooking(Learner learner, Lesson lesson) {
+    public void cancelBooking(Learner learner, Lesson lesson) {
         lesson.getLearners().remove(learner);
         learner.cancelBooking(lesson);
         System.out.println("Booking canceled successfully.");
